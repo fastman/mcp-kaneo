@@ -1,0 +1,30 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+build/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# TypeScript
+*.tsbuildinfo
+
+# Coverage
+coverage
+*.lcov
+.nyc_output
+
+# Misc
+.DS_Store
+*.pid
+*.seed
+.pid.lock
