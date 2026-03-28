@@ -201,6 +201,56 @@ server.registerTool(
 );
 
 server.registerTool(
+  'kaneo_update_label',
+  {
+    title: 'Update Label',
+    description: 'Update a label name or color in Kaneo',
+    inputSchema: z.object({
+      labelId: z.string().describe('Label ID'),
+      name: z.string().optional().describe('New label name'),
+      color: z.string().optional().describe('Hex color code (e.g., "#ef4444", "#22c55e")'),
+    }),
+  },
+  async ({ labelId, name, color }) => {
+    const client = getClient();
+    const label = await client.updateLabel(labelId, { name, color });
+    return { content: [{ type: 'text', text: JSON.stringify(label, null, 2) }] };
+  }
+);
+
+server.registerTool(
+  'kaneo_delete_label',
+  {
+    title: 'Delete Label',
+    description: 'Delete a label from Kaneo',
+    inputSchema: z.object({
+      labelId: z.string().describe('Label ID to delete'),
+    }),
+  },
+  async ({ labelId }) => {
+    const client = getClient();
+    await client.deleteLabel(labelId);
+    return { content: [{ type: 'text', text: JSON.stringify({ success: true, labelId }, null, 2) }] };
+  }
+);
+
+server.registerTool(
+  'kaneo_list_task_labels',
+  {
+    title: 'List Task Labels',
+    description: 'List all labels attached to a Kaneo task',
+    inputSchema: z.object({
+      taskId: z.string().describe('Task ID'),
+    }),
+  },
+  async ({ taskId }) => {
+    const client = getClient();
+    const labels = await client.listTaskLabels(taskId);
+    return { content: [{ type: 'text', text: JSON.stringify(labels, null, 2) }] };
+  }
+);
+
+server.registerTool(
   'kaneo_detach_label',
   {
     title: 'Detach Label',

@@ -45,19 +45,50 @@ export interface Label {
 }
 
 export interface Comment {
-  id: string;
-  taskId: string;
-  userId: string;
-  comment: string;
-  createdAt: string;
+  id?: string;
+  taskId?: string;
+  userId?: string;
+  comment?: string;
+  createdAt?: string;
   updatedAt?: string;
 }
 
+export interface CommentResult {
+  command: string;
+  rowCount: number;
+  oid: number;
+  rows: unknown[];
+  fields: unknown[];
+}
+
 export interface SearchResult {
+  results: unknown[];
+  totalCount: number;
+  searchQuery: string;
   tasks?: Task[];
   projects?: Project[];
   workspaces?: Workspace[];
   comments?: Comment[];
+}
+
+export interface TasksResponse {
+  data: {
+    id: string;
+    name: string;
+    slug: string;
+    columns: {
+      id: string;
+      name: string;
+      isFinal: boolean;
+      tasks: Task[];
+    }[];
+  };
+  pagination: {
+    total: number;
+    page: number;
+    pageSize: number;
+    totalPages: number;
+  };
 }
 
 export interface CreateTaskInput {

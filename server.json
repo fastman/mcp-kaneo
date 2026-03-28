@@ -1,0 +1,35 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.fastman/mcp-kaneo",
+  "title": "Kaneo MCP",
+  "description": "MCP server for Kaneo task management",
+  "repository": {
+    "url": "https://github.com/fastman/mcp-kaneo",
+    "source": "github"
+  },
+  "version": "0.1.0",
+  "packages": [
+    {
+      "registryType": "npm",
+      "identifier": "mcp-kaneo",
+      "transport": {
+        "type": "stdio"
+      },
+      "environmentVariables": [
+        {
+          "name": "KANEO_BASE_URL",
+          "description": "Kaneo API base URL (e.g., https://your-kaneo-instance.com/api)",
+          "isRequired": true,
+          "format": "string"
+        },
+        {
+          "name": "KANEO_TOKEN",
+          "description": "Kaneo API token",
+          "isRequired": true,
+          "format": "string",
+          "isSecret": true
+        }
+      ]
+    }
+  ]
+}

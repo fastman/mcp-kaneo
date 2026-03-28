@@ -1,0 +1,6 @@
+{
+  "kaneo": {
+    "command": "npx",
+    "args": ["mcp-kaneo@latest"]
+  }
+}

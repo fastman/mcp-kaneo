@@ -5,7 +5,9 @@ import type {
   Task,
   Label,
   Comment,
+  CommentResult,
   SearchResult,
+  TasksResponse,
   CreateTaskInput,
   CreateLabelInput,
 } from './types.js';
@@ -66,8 +68,8 @@ export class KaneoClient {
     return this.request<Task>(`/task/${taskId}`);
   }
 
-  async listTasks(projectId: string): Promise<Task[]> {
-    return this.request<Task[]>(`/task/tasks/${projectId}`);
+  async listTasks(projectId: string): Promise<TasksResponse> {
+    return this.request<TasksResponse>(`/task/tasks/${projectId}`);
   }
 
   async createTask(projectId: string, data: Omit<CreateTaskInput, 'projectId'>): Promise<Task> {
@@ -156,8 +158,8 @@ export class KaneoClient {
     return this.request<Label[]>(`/label/task/${taskId}`);
   }
 
-  async addComment(taskId: string, comment: string): Promise<Comment> {
-    return this.request<Comment>('/activity/comment', {
+  async addComment(taskId: string, comment: string): Promise<CommentResult> {
+    return this.request<CommentResult>('/activity/comment', {
       method: 'POST',
       body: JSON.stringify({ taskId, comment }),
     });
