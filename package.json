@@ -13,12 +13,18 @@
     "type": "git",
     "url": "https://github.com/fastman/mcp-kaneo.git"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "server.json"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "tsx watch src/index.ts",
     "start": "node dist/index.js",
     "test": "vitest run",
-    "release": "semantic-release"
+    "release": "semantic-release",
+    "prepublishOnly": "npm run build"
   },
   "keywords": [
     "mcp",
