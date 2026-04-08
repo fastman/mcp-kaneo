@@ -6,12 +6,12 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "bin": {
-    "mcp-kaneo": "./dist/index.js"
+    "mcp-kaneo": "dist/index.js"
   },
   "mcpName": "io.github.fastman/mcp-kaneo",
   "repository": {
     "type": "git",
-    "url": "https://github.com/fastman/mcp-kaneo.git"
+    "url": "git+https://github.com/fastman/mcp-kaneo.git"
   },
   "files": [
     "dist",
@@ -35,17 +35,17 @@
   ],
   "license": "MIT",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.0",
-    "zod": "^3.23.0"
+    "@modelcontextprotocol/sdk": "1.29.0",
+    "zod": "3.23.0"
   },
   "devDependencies": {
-    "@semantic-release/github": "^9.2.6",
-    "@semantic-release/npm": "^11.0.2",
-    "@types/node": "^20.11.0",
-    "semantic-release": "^23.1.1",
-    "tsx": "^4.7.0",
-    "typescript": "^5.3.0",
-    "vitest": "^4.1.2"
+    "@semantic-release/github": "9.2.6",
+    "@semantic-release/npm": "11.0.2",
+    "@types/node": "20.11.0",
+    "semantic-release": "23.1.1",
+    "tsx": "4.7.0",
+    "typescript": "5.3.3",
+    "vitest": "4.1.2"
   },
   "engines": {
     "node": ">=18.0.0"

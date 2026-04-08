@@ -1,6 +1,10 @@
 {
   "kaneo": {
-    "command": "npx",
-    "args": ["mcp-kaneo@latest"]
+    "command": "node",
+    "args": ["./dist/index.js"],
+    "env": {
+      "KANEO_BASE_URL": "https://tasks.xserve.pl/api",
+      "KANEO_TOKEN": "RVmbRGqUiNDwfUNnsLQIHKXvXTVfReIosSTFAjfthjJLomtzfvvJypYuvFqLyqPp"
+    }
   }
 }

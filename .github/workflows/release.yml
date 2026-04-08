@@ -3,35 +3,37 @@ name: Release
 on:
   push:
     branches:
-      - main
-
-permissions:
-  contents: write
-  issues: write
-  pull-requests: write
-  id-token: write
+      - master
+      - beta
+      - '+([0-9])?(.{+([0-9]),x}).x'
 
 jobs:
   release:
     runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
+    permissions:
+      contents: write
+      id-token: write
+      issues: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
         with:
           node-version: 'lts/*'
 
-      - name: Install dependencies
+      - name: Install packages
         run: npm ci
 
-      - name: Build
+      - name: Audit npm signatures
+        run: npm audit signatures
+
+      - name: Build project
         run: npm run build
 
-      - name: Release
+      - name: Run Semantic Release
+        run: npx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: npx semantic-release
+          NPM_CONFIG_PROVENANCE: true

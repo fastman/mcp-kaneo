@@ -16,17 +16,12 @@ server.registerTool(
   {
     title: 'List Workspaces',
     description: 'List all accessible workspaces in Kaneo',
-    inputSchema: z.object({}),
-    outputSchema: z.array(z.object({
-      id: z.string(),
-      name: z.string(),
-      slug: z.string(),
-    })),
+    inputSchema: {} as any,
   },
   async () => {
     const client = getClient();
     const workspaces = await client.listWorkspaces();
-    return { content: [{ type: 'text', text: JSON.stringify(workspaces, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(workspaces) }] };
   }
 );
 
@@ -37,12 +32,12 @@ server.registerTool(
     description: 'List all projects in a Kaneo workspace',
     inputSchema: z.object({
       workspaceId: z.string().describe('Workspace ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ workspaceId }) => {
+  async ({ workspaceId }: any) => {
     const client = getClient();
     const projects = await client.listProjects(workspaceId);
-    return { content: [{ type: 'text', text: JSON.stringify(projects, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(projects) }] };
   }
 );
 
@@ -53,12 +48,12 @@ server.registerTool(
     description: 'Get details of a specific Kaneo task',
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId }) => {
+  async ({ taskId }: any) => {
     const client = getClient();
     const task = await client.getTask(taskId);
-    return { content: [{ type: 'text', text: JSON.stringify(task, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
   }
 );
 
@@ -73,12 +68,12 @@ server.registerTool(
       description: z.string().describe('Task description (supports markdown)'),
       priority: priorityEnum.describe('Task priority'),
       status: z.string().describe('Column slug (e.g., "to-do", "in-progress", "done")'),
-    }),
+    }) as unknown as any,
   },
-  async ({ projectId, title, description, priority, status }) => {
+  async ({ projectId, title, description, priority, status }: any) => {
     const client = getClient();
     const task = await client.createTask(projectId, { title, description, priority, status });
-    return { content: [{ type: 'text', text: JSON.stringify(task, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
   }
 );
 
@@ -90,12 +85,12 @@ server.registerTool(
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
       title: z.string().describe('New task title'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId, title }) => {
+  async ({ taskId, title }: any) => {
     const client = getClient();
     const task = await client.updateTaskTitle(taskId, title);
-    return { content: [{ type: 'text', text: JSON.stringify(task, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
   }
 );
 
@@ -107,12 +102,12 @@ server.registerTool(
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
       description: z.string().describe('New task description (supports markdown)'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId, description }) => {
+  async ({ taskId, description }: any) => {
     const client = getClient();
     const task = await client.updateTaskDescription(taskId, description);
-    return { content: [{ type: 'text', text: JSON.stringify(task, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
   }
 );
 
@@ -124,12 +119,12 @@ server.registerTool(
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
       status: z.string().describe('Column slug (e.g., "to-do", "in-progress", "done", "planned")'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId, status }) => {
+  async ({ taskId, status }: any) => {
     const client = getClient();
     const task = await client.updateTaskStatus(taskId, status);
-    return { content: [{ type: 'text', text: JSON.stringify(task, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
   }
 );
 
@@ -140,12 +135,12 @@ server.registerTool(
     description: 'Delete a Kaneo task',
     inputSchema: z.object({
       taskId: z.string().describe('Task ID to delete'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId }) => {
+  async ({ taskId }: any) => {
     const client = getClient();
     await client.deleteTask(taskId);
-    return { content: [{ type: 'text', text: JSON.stringify({ success: true, taskId }, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, taskId }) }] };
   }
 );
 
@@ -156,12 +151,12 @@ server.registerTool(
     description: 'List all labels in a Kaneo workspace',
     inputSchema: z.object({
       workspaceId: z.string().describe('Workspace ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ workspaceId }) => {
+  async ({ workspaceId }: any) => {
     const client = getClient();
     const labels = await client.listLabels(workspaceId);
-    return { content: [{ type: 'text', text: JSON.stringify(labels, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(labels) }] };
   }
 );
 
@@ -174,12 +169,12 @@ server.registerTool(
       workspaceId: z.string().describe('Workspace ID'),
       name: z.string().describe('Label name'),
       color: z.string().describe('Hex color code (e.g., "#ef4444", "#22c55e")'),
-    }),
+    }) as unknown as any,
   },
-  async ({ workspaceId, name, color }) => {
+  async ({ workspaceId, name, color }: any) => {
     const client = getClient();
     const label = await client.createLabel({ workspaceId, name, color });
-    return { content: [{ type: 'text', text: JSON.stringify(label, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(label) }] };
   }
 );
 
@@ -191,12 +186,12 @@ server.registerTool(
     inputSchema: z.object({
       labelId: z.string().describe('Label ID'),
       taskId: z.string().describe('Task ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ labelId, taskId }) => {
+  async ({ labelId, taskId }: any) => {
     const client = getClient();
     await client.attachLabel(labelId, taskId);
-    return { content: [{ type: 'text', text: JSON.stringify({ success: true, labelId, taskId }, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, labelId, taskId }) }] };
   }
 );
 
@@ -209,12 +204,12 @@ server.registerTool(
       labelId: z.string().describe('Label ID'),
       name: z.string().optional().describe('New label name'),
       color: z.string().optional().describe('Hex color code (e.g., "#ef4444", "#22c55e")'),
-    }),
+    }) as unknown as any,
   },
-  async ({ labelId, name, color }) => {
+  async ({ labelId, name, color }: any) => {
     const client = getClient();
     const label = await client.updateLabel(labelId, { name, color });
-    return { content: [{ type: 'text', text: JSON.stringify(label, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(label) }] };
   }
 );
 
@@ -225,12 +220,12 @@ server.registerTool(
     description: 'Delete a label from Kaneo',
     inputSchema: z.object({
       labelId: z.string().describe('Label ID to delete'),
-    }),
+    }) as unknown as any,
   },
-  async ({ labelId }) => {
+  async ({ labelId }: any) => {
     const client = getClient();
     await client.deleteLabel(labelId);
-    return { content: [{ type: 'text', text: JSON.stringify({ success: true, labelId }, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, labelId }) }] };
   }
 );
 
@@ -241,12 +236,12 @@ server.registerTool(
     description: 'List all labels attached to a Kaneo task',
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId }) => {
+  async ({ taskId }: any) => {
     const client = getClient();
     const labels = await client.listTaskLabels(taskId);
-    return { content: [{ type: 'text', text: JSON.stringify(labels, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(labels) }] };
   }
 );
 
@@ -258,12 +253,12 @@ server.registerTool(
     inputSchema: z.object({
       labelId: z.string().describe('Label ID'),
       taskId: z.string().describe('Task ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ labelId, taskId }) => {
+  async ({ labelId, taskId }: any) => {
     const client = getClient();
     await client.detachLabel(labelId, taskId);
-    return { content: [{ type: 'text', text: JSON.stringify({ success: true, labelId, taskId }, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, labelId, taskId }) }] };
   }
 );
 
@@ -275,12 +270,12 @@ server.registerTool(
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
       comment: z.string().describe('Comment text'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId, comment }) => {
+  async ({ taskId, comment }: any) => {
     const client = getClient();
     const result = await client.addComment(taskId, comment);
-    return { content: [{ type: 'text', text: JSON.stringify(result, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(result) }] };
   }
 );
 
@@ -291,12 +286,12 @@ server.registerTool(
     description: 'List all comments on a Kaneo task',
     inputSchema: z.object({
       taskId: z.string().describe('Task ID'),
-    }),
+    }) as unknown as any,
   },
-  async ({ taskId }) => {
+  async ({ taskId }: any) => {
     const client = getClient();
     const comments = await client.listComments(taskId);
-    return { content: [{ type: 'text', text: JSON.stringify(comments, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(comments) }] };
   }
 );
 
@@ -311,12 +306,12 @@ server.registerTool(
       workspaceId: z.string().optional().describe('Filter by workspace ID'),
       projectId: z.string().optional().describe('Filter by project ID'),
       limit: z.number().min(1).max(50).optional().describe('Maximum results (default 20)'),
-    }),
+    }) as unknown as any,
   },
-  async ({ query, type, workspaceId, projectId, limit }) => {
+  async ({ query, type, workspaceId, projectId, limit }: any) => {
     const client = getClient();
     const results = await client.search(query, { type, workspaceId, projectId, limit });
-    return { content: [{ type: 'text', text: JSON.stringify(results, null, 2) }] };
+    return { content: [{ type: 'text' as const, text: JSON.stringify(results) }] };
   }
 );
 
