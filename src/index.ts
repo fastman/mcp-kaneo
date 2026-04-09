@@ -310,6 +310,22 @@ export function registerTools(server: McpServer): void {
       return { content: [{ type: 'text' as const, text: JSON.stringify(results) }] };
     }
   );
+
+  server.registerTool(
+    'kaneo_list_subtasks',
+    {
+      title: 'List Subtasks',
+      description: 'List subtasks of a parent task (uses "[Parent #taskId]" description pattern)',
+      inputSchema: z.object({
+        parentTaskId: z.string().describe('Parent task ID'),
+      }) as unknown as any,
+    },
+    async ({ parentTaskId }: any) => {
+      const client = getClient();
+      const subtasks = await client.listSubtasks(parentTaskId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(subtasks) }] };
+    }
+  );
 }
 
 const server = new McpServer({

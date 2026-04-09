@@ -21,6 +21,13 @@ export class KaneoClient {
     this.token = token;
   }
 
+  async createWorkspace(name: string, slug: string): Promise<Workspace> {
+    return this.request<Workspace>('/auth/organization/create', {
+      method: 'POST',
+      body: JSON.stringify({ name, slug }),
+    });
+  }
+
   private async request<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
     const url = `${this.baseUrl}${endpoint}`;
     
@@ -113,6 +120,33 @@ export class KaneoClient {
     });
   }
 
+  async updateTaskPriority(taskId: string, priority: string): Promise<Task> {
+    return this.request<Task>(`/task/priority/${taskId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ priority }),
+    });
+  }
+
+  async updateTaskAssignee(taskId: string, userId: string | null): Promise<Task> {
+    return this.request<Task>(`/task/assignee/${taskId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ userId }),
+    });
+  }
+
+  async updateTaskDueDate(taskId: string, dueDate: string): Promise<Task> {
+    return this.request<Task>(`/task/due-date/${taskId}`, {
+      method: 'PUT',
+      body: JSON.stringify({ dueDate }),
+    });
+  }
+
+  async deleteProject(projectId: string): Promise<void> {
+    await this.request<void>(`/project/${projectId}`, {
+      method: 'DELETE',
+    });
+  }
+
   async listLabels(workspaceId: string): Promise<Label[]> {
     return this.request<Label[]>(`/label/workspace/${workspaceId}`);
   }
@@ -197,6 +231,11 @@ export class KaneoClient {
     if (options.limit) params.set('limit', options.limit.toString());
 
     return this.request<SearchResult>(`/search?${params.toString()}`);
+  }
+
+  async listSubtasks(parentTaskId: string): Promise<Task[]> {
+    const result = await this.search(`[Parent #${parentTaskId}]`, { type: 'tasks', limit: 50 });
+    return result.tasks || [];
   }
 }
 

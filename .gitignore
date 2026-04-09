@@ -8,6 +8,11 @@ lerna-debug.log*
 
 # Project docs
 docs/
+!docs/PROGRESS.md
+!docs/KANEO.md
+!docs/LABELS.md
+!docs/TEST_WORKSPACE.md
+docs/test-integration/
 
 # MCP config (contains secrets)
 .mcp.json
