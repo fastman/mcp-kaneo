@@ -1,0 +1,10 @@
+{
+  "kaneo": {
+    "command": "node",
+    "args": ["./dist/index.js"],
+    "env": {
+      "KANEO_BASE_URL": "https://your-kaneo-url/api",
+      "KANEO_TOKEN": "your-token-here"
+    }
+  }
+}
