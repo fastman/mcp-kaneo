@@ -38,6 +38,78 @@ export function registerTools(server: McpServer): void {
   );
 
   server.registerTool(
+    'kaneo_get_project',
+    {
+      title: 'Get Project',
+      description: 'Get details of a specific Kaneo project',
+      inputSchema: z.object({
+        projectId: z.string().describe('Project ID'),
+      }) as unknown as any,
+    },
+    async ({ projectId }: any) => {
+      const client = getClient();
+      const project = await client.getProject(projectId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(project) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_create_project',
+    {
+      title: 'Create Project',
+      description: 'Create a new project in a Kaneo workspace. For icon, suggest based on project name: use Layout as default, or Code for dev projects, FileText for docs, Target for goals, Rocket for launches, Users for team projects.',
+      inputSchema: z.object({
+        name: z.string().describe('Project name'),
+        slug: z.string().describe('Project slug (URL-friendly, e.g., "my-project"). Suggest from name by converting to kebab-case.'),
+        workspaceId: z.string().describe('Workspace ID'),
+        icon: z.string().optional().describe('Project icon name (default: Layout)'),
+      }) as unknown as any,
+    },
+    async ({ name, slug, workspaceId, icon }: any) => {
+      const client = getClient();
+      const project = await client.createProject({ name, slug, workspaceId, icon: icon || 'Layout' });
+      return { content: [{ type: 'text' as const, text: JSON.stringify(project) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_update_project',
+    {
+      title: 'Update Project',
+      description: 'Update an existing Kaneo project',
+      inputSchema: z.object({
+        projectId: z.string().describe('Project ID to update'),
+        name: z.string().optional().describe('New project name'),
+        slug: z.string().optional().describe('New project slug'),
+        icon: z.string().optional().describe('New project icon'),
+        description: z.string().optional().describe('Project description'),
+        isPublic: z.boolean().optional().describe('Make project public'),
+      }) as unknown as any,
+    },
+    async ({ projectId, name, slug, icon, description, isPublic }: any) => {
+      const client = getClient();
+      const project = await client.updateProject(projectId, { name, slug, icon, description, isPublic });
+      return { content: [{ type: 'text' as const, text: JSON.stringify(project) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_delete_project',
+    {
+      title: 'Delete Project',
+      description: 'Delete a Kaneo project',
+      inputSchema: z.object({
+        projectId: z.string().describe('Project ID to delete'),
+      }) as unknown as any,
+    },
+    async ({ projectId }: any) => {
+      const client = getClient();
+      await client.deleteProject(projectId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, projectId }) }] };
+    }
+  );
+
+  server.registerTool(
     'kaneo_get_task',
     {
       title: 'Get Task',
@@ -137,6 +209,73 @@ export function registerTools(server: McpServer): void {
       const client = getClient();
       await client.deleteTask(taskId);
       return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, taskId }) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_list_columns',
+    {
+      title: 'List Columns',
+      description: 'List all columns in a Kaneo project',
+      inputSchema: z.object({
+        projectId: z.string().describe('Project ID'),
+      }) as unknown as any,
+    },
+    async ({ projectId }: any) => {
+      const client = getClient();
+      const columns = await client.listColumns(projectId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(columns) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_update_task_priority',
+    {
+      title: 'Update Task Priority',
+      description: 'Update the priority of a Kaneo task',
+      inputSchema: z.object({
+        taskId: z.string().describe('Task ID'),
+        priority: priorityEnum.describe('Task priority'),
+      }) as unknown as any,
+    },
+    async ({ taskId, priority }: any) => {
+      const client = getClient();
+      const task = await client.updateTaskPriority(taskId, priority);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_update_task_assignee',
+    {
+      title: 'Update Task Assignee',
+      description: 'Update the assignee of a Kaneo task',
+      inputSchema: z.object({
+        taskId: z.string().describe('Task ID'),
+        userId: z.string().nullable().describe('User ID to assign (null to unassign)'),
+      }) as unknown as any,
+    },
+    async ({ taskId, userId }: any) => {
+      const client = getClient();
+      const task = await client.updateTaskAssignee(taskId, userId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_update_task_due_date',
+    {
+      title: 'Update Task Due Date',
+      description: 'Update the due date of a Kaneo task',
+      inputSchema: z.object({
+        taskId: z.string().describe('Task ID'),
+        dueDate: z.string().describe('Due date (ISO 8601 format, e.g., 2026-12-31T23:59:00Z)'),
+      }) as unknown as any,
+    },
+    async ({ taskId, dueDate }: any) => {
+      const client = getClient();
+      const task = await client.updateTaskDueDate(taskId, dueDate);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
     }
   );
 
@@ -288,6 +427,39 @@ export function registerTools(server: McpServer): void {
       const client = getClient();
       const comments = await client.listComments(taskId);
       return { content: [{ type: 'text' as const, text: JSON.stringify(comments) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_edit_comment',
+    {
+      title: 'Edit Comment',
+      description: 'Edit a comment on a Kaneo task',
+      inputSchema: z.object({
+        commentId: z.string().describe('Comment/Activity ID'),
+        comment: z.string().describe('New comment text'),
+      }) as unknown as any,
+    },
+    async ({ commentId, comment }: any) => {
+      const client = getClient();
+      const result = await client.editComment(commentId, comment);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(result) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_delete_comment',
+    {
+      title: 'Delete Comment',
+      description: 'Delete a comment from a Kaneo task',
+      inputSchema: z.object({
+        commentId: z.string().describe('Comment/Activity ID to delete'),
+      }) as unknown as any,
+    },
+    async ({ commentId }: any) => {
+      const client = getClient();
+      await client.deleteComment(commentId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, commentId }) }] };
     }
   );
 

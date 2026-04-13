@@ -67,6 +67,19 @@ export class KaneoClient {
     });
   }
 
+  async updateProject(projectId: string, data: { name?: string; slug?: string; icon?: string; description?: string; isPublic?: boolean }): Promise<Project> {
+    return this.request<Project>(`/project/${projectId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteProject(projectId: string): Promise<Project> {
+    return this.request<Project>(`/project/${projectId}`, {
+      method: 'DELETE',
+    });
+  }
+
   async listColumns(projectId: string): Promise<Column[]> {
     return this.request<Column[]>(`/column/${projectId}`);
   }
@@ -138,12 +151,6 @@ export class KaneoClient {
     return this.request<Task>(`/task/due-date/${taskId}`, {
       method: 'PUT',
       body: JSON.stringify({ dueDate }),
-    });
-  }
-
-  async deleteProject(projectId: string): Promise<void> {
-    await this.request<void>(`/project/${projectId}`, {
-      method: 'DELETE',
     });
   }
 

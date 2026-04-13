@@ -49,7 +49,8 @@ function createMockClient() {
     updateTaskAssignee: vi.fn().mockResolvedValue({ id: 'task-1', userId: 'user-1' }),
     updateTaskDueDate: vi.fn().mockResolvedValue({ id: 'task-1', dueDate: '2026-12-31' }),
     deleteTask: vi.fn().mockResolvedValue(undefined),
-    deleteProject: vi.fn().mockResolvedValue(undefined),
+    updateProject: vi.fn().mockResolvedValue({ id: 'proj-1', name: 'Updated Project' }),
+    deleteProject: vi.fn().mockResolvedValue({ id: 'proj-1', name: 'Deleted Project' }),
     listLabels: vi.fn().mockResolvedValue([{ id: 'label-1', name: 'bug' }]),
     createLabel: vi.fn().mockResolvedValue({ id: 'label-new', name: 'new-label' }),
     attachLabel: vi.fn().mockResolvedValue(undefined),
@@ -141,6 +142,43 @@ describe('MCP Tool Handlers', () => {
         icon: '🚀',
       });
       expect(result?.content[0].type).toBe('text');
+    });
+
+    it('registers kaneo_update_project', async () => {
+      const { server, tools } = createServerMock();
+      const { registerTools } = await import('../../src/index.js');
+      
+      registerTools(server as never);
+
+      const result = await tools.get('kaneo_update_project')?.handler({
+        projectId: 'proj-1',
+        name: 'Updated Project',
+        slug: 'updated-project',
+        description: 'Updated description',
+        isPublic: true,
+      });
+      
+      expect(mockClient.updateProject).toHaveBeenCalledWith('proj-1', {
+        name: 'Updated Project',
+        slug: 'updated-project',
+        description: 'Updated description',
+        isPublic: true,
+      });
+      expect(result?.content[0].type).toBe('text');
+    });
+
+    it('registers kaneo_delete_project', async () => {
+      const { server, tools } = createServerMock();
+      const { registerTools } = await import('../../src/index.js');
+      
+      registerTools(server as never);
+
+      const result = await tools.get('kaneo_delete_project')?.handler({
+        projectId: 'proj-1',
+      });
+      
+      expect(mockClient.deleteProject).toHaveBeenCalledWith('proj-1');
+      expect(result?.content[0].text).toContain('success');
     });
 
     it('registers kaneo_list_columns', async () => {
@@ -435,7 +473,7 @@ describe('MCP Tool Handlers', () => {
       registerTools(server as never);
 
       const result = await tools.get('kaneo_edit_comment')?.handler({
-        activityId: 'comment-1',
+        commentId: 'comment-1',
         comment: 'Updated comment',
       });
       
@@ -449,7 +487,7 @@ describe('MCP Tool Handlers', () => {
       
       registerTools(server as never);
 
-      const result = await tools.get('kaneo_delete_comment')?.handler({ activityId: 'comment-1' });
+      const result = await tools.get('kaneo_delete_comment')?.handler({ commentId: 'comment-1' });
       
       expect(mockClient.deleteComment).toHaveBeenCalledWith('comment-1');
       expect(result?.content[0].text).toContain('success');
@@ -543,6 +581,8 @@ describe('MCP Tool Handlers', () => {
         'kaneo_list_projects',
         'kaneo_get_project',
         'kaneo_create_project',
+        'kaneo_update_project',
+        'kaneo_delete_project',
         'kaneo_list_columns',
         'kaneo_get_task',
         'kaneo_create_task',
@@ -572,7 +612,7 @@ describe('MCP Tool Handlers', () => {
         expect(tools.has(toolName)).toBe(true);
       }
 
-      expect(tools.size).toBe(28);
+      expect(tools.size).toBe(29);
     });
   });
 });
