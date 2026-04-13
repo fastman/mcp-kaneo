@@ -1,5 +1,5 @@
 {
-  "name": "mcp-kaneo",
+  "name": "@fastman/mcp-kaneo",
   "version": "0.1.0",
   "description": "MCP server for Kaneo task management API",
   "type": "module",
@@ -13,6 +13,7 @@
     "type": "git",
     "url": "git+https://github.com/fastman/mcp-kaneo.git"
   },
+  "homepage": "https://github.com/fastman/mcp-kaneo#readme",
   "files": [
     "dist",
     "README.md",
