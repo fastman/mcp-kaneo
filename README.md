@@ -21,14 +21,14 @@ MCP server for Kaneo task management API. Lets your AI coding assistant manage t
 ### Using npx (recommended)
 
 ```bash
-npx mcp-kaneo
+npx @fastman/mcp-kaneo
 ```
 
 ### Using npm
 
 ```bash
-npm install -g mcp-kaneo
-mcp-kaneo
+npm install -g @fastman/mcp-kaneo
+npx @fastman/mcp-kaneo
 ```
 
 ## Configuration
@@ -49,7 +49,7 @@ Add to your `~/.config/opencode/opencode.json`:
   "mcp": {
     "kaneo": {
       "type": "local",
-      "command": ["npx", "-y", "mcp-kaneo"],
+      "command": ["npx", "-y", "@fastman/mcp-kaneo"],
       "environment": {
         "KANEO_BASE_URL": "https://your-kaneo-instance.com/api",
         "KANEO_TOKEN": "${KANEO_TOKEN}"
@@ -79,7 +79,7 @@ Or for local development:
 ### Claude Code
 
 ```bash
-claude mcp add kaneo --scope user npx mcp-kaneo
+claude mcp add kaneo --scope user npx @fastman/mcp-kaneo
 ```
 
 ### Cline
@@ -91,7 +91,7 @@ Add to your MCP settings:
   "mcpServers": {
     "kaneo": {
       "command": "npx",
-      "args": ["-y", "mcp-kaneo"]
+      "args": ["-y", "@fastman/mcp-kaneo"]
     }
   }
 }
@@ -104,7 +104,7 @@ Go to `Cursor Settings` → `MCP` → `New MCP Server`:
 ```json
 {
   "command": "npx",
-  "args": ["-y", "mcp-kaneo"]
+  "args": ["-y", "@fastman/mcp-kaneo"]
 }
 ```
 
