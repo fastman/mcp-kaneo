@@ -35,6 +35,71 @@ describe('KaneoClient', () => {
       );
       expect(result).toEqual(mockWorkspaces);
     });
+
+    it('should list workspaces with workspaceId filter', async () => {
+      const mockWorkspaces = [{ id: 'ws-1', name: 'Workspace 1' }];
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockWorkspaces),
+      });
+
+      const result = await client.listWorkspaces('ws-1');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://api.test/auth/organization/list?workspaceId=ws-1',
+        expect.any(Object)
+      );
+      expect(result).toEqual(mockWorkspaces);
+    });
+
+    it('should get workspace by id', async () => {
+      const mockWorkspace = { id: 'ws-1', name: 'Workspace 1', slug: 'workspace-1' };
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockWorkspace),
+      });
+
+      const result = await client.getWorkspace('ws-1');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://api.test/auth/organization/ws-1',
+        expect.any(Object)
+      );
+      expect(result).toEqual(mockWorkspace);
+    });
+
+    it('should update workspace', async () => {
+      const mockWorkspace = { id: 'ws-1', name: 'Updated Workspace', slug: 'updated-workspace' };
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve(mockWorkspace),
+      });
+
+      const result = await client.updateWorkspace('ws-1', { name: 'Updated Workspace' });
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://api.test/auth/organization/ws-1',
+        expect.objectContaining({
+          method: 'PUT',
+          body: JSON.stringify({ name: 'Updated Workspace' }),
+        })
+      );
+      expect(result).toEqual(mockWorkspace);
+    });
+
+    it('should delete workspace', async () => {
+      fetchSpy.mockResolvedValue({
+        ok: true,
+        json: () => Promise.resolve({}),
+      });
+
+      await client.deleteWorkspace('ws-1');
+
+      expect(fetchSpy).toHaveBeenCalledWith(
+        'https://api.test/auth/organization/ws-1',
+        expect.objectContaining({ method: 'DELETE' })
+      );
+    });
   });
 
   describe('Projects', () => {

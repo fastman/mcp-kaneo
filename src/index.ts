@@ -12,12 +12,65 @@ export function registerTools(server: McpServer): void {
     {
       title: 'List Workspaces',
       description: 'List all accessible workspaces in Kaneo',
-      inputSchema: {} as any,
+      inputSchema: z.object({
+        workspaceId: z.string().optional().describe('Filter by workspace ID'),
+      }) as unknown as any,
     },
-    async () => {
+    async ({ workspaceId }: any) => {
       const client = getClient();
-      const workspaces = await client.listWorkspaces();
+      const workspaces = await client.listWorkspaces(workspaceId);
       return { content: [{ type: 'text' as const, text: JSON.stringify(workspaces) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_get_workspace',
+    {
+      title: 'Get Workspace',
+      description: 'Get details of a specific Kaneo workspace',
+      inputSchema: z.object({
+        workspaceId: z.string().describe('Workspace ID'),
+      }) as unknown as any,
+    },
+    async ({ workspaceId }: any) => {
+      const client = getClient();
+      const workspace = await client.getWorkspace(workspaceId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(workspace) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_update_workspace',
+    {
+      title: 'Update Workspace',
+      description: 'Update an existing Kaneo workspace',
+      inputSchema: z.object({
+        workspaceId: z.string().describe('Workspace ID to update'),
+        name: z.string().optional().describe('New workspace name'),
+        slug: z.string().optional().describe('New workspace slug'),
+        icon: z.string().optional().describe('New workspace icon'),
+      }) as unknown as any,
+    },
+    async ({ workspaceId, name, slug, icon }: any) => {
+      const client = getClient();
+      const workspace = await client.updateWorkspace(workspaceId, { name, slug, icon });
+      return { content: [{ type: 'text' as const, text: JSON.stringify(workspace) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_delete_workspace',
+    {
+      title: 'Delete Workspace',
+      description: 'Delete a Kaneo workspace',
+      inputSchema: z.object({
+        workspaceId: z.string().describe('Workspace ID to delete'),
+      }) as unknown as any,
+    },
+    async ({ workspaceId }: any) => {
+      const client = getClient();
+      await client.deleteWorkspace(workspaceId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, workspaceId }) }] };
     }
   );
 

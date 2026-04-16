@@ -48,8 +48,28 @@ export class KaneoClient {
     return response.json() as T;
   }
 
-  async listWorkspaces(): Promise<Workspace[]> {
+  async listWorkspaces(workspaceId?: string): Promise<Workspace[]> {
+    if (workspaceId) {
+      return this.request<Workspace[]>(`/auth/organization/list?workspaceId=${workspaceId}`);
+    }
     return this.request<Workspace[]>('/auth/organization/list');
+  }
+
+  async getWorkspace(workspaceId: string): Promise<Workspace> {
+    return this.request<Workspace>(`/auth/organization/${workspaceId}`);
+  }
+
+  async updateWorkspace(workspaceId: string, data: { name?: string; slug?: string; icon?: string }): Promise<Workspace> {
+    return this.request<Workspace>(`/auth/organization/${workspaceId}`, {
+      method: 'PUT',
+      body: JSON.stringify(data),
+    });
+  }
+
+  async deleteWorkspace(workspaceId: string): Promise<void> {
+    await this.request<void>(`/auth/organization/${workspaceId}`, {
+      method: 'DELETE',
+    });
   }
 
   async listProjects(workspaceId: string): Promise<Project[]> {

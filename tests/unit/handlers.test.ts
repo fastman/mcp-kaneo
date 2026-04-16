@@ -578,6 +578,9 @@ describe('MCP Tool Handlers', () => {
 
       const expectedTools = [
         'kaneo_list_workspaces',
+        'kaneo_get_workspace',
+        'kaneo_update_workspace',
+        'kaneo_delete_workspace',
         'kaneo_list_projects',
         'kaneo_get_project',
         'kaneo_create_project',
@@ -612,7 +615,7 @@ describe('MCP Tool Handlers', () => {
         expect(tools.has(toolName)).toBe(true);
       }
 
-      expect(tools.size).toBe(29);
+      expect(tools.size).toBe(32);
     });
   });
 });
