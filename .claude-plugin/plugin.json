@@ -1,0 +1,23 @@
+{
+  "name": "mcp-kaneo",
+  "version": "0.1.0",
+  "description": "MCP server for Kaneo task management API - create, read, update, delete tasks, add comments, search, and manage projects",
+  "mcpServers": {
+    "io.github.fastman/mcp-kaneo": {
+      "command": "npx",
+      "args": ["-y", "@fastman/mcp-kaneo"],
+      "env": {
+        "KANEO_BASE_URL": {
+          "type": "string",
+          "description": "Kaneo API base URL",
+          "required": true
+        },
+        "KANEO_TOKEN": {
+          "type": "string",
+          "description": "Kaneo API token",
+          "required": true
+        }
+      }
+    }
+  }
+}

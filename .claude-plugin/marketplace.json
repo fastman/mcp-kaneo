@@ -1,0 +1,17 @@
+{
+  "name": "kaneo-plugins",
+  "version": "0.1.0",
+  "description": "Kaneo MCP server plugin for task management",
+  "repository": "https://github.com/fastman/mcp-kaneo",
+  "owner": {
+    "name": "fastman",
+    "url": "https://github.com/fastman"
+  },
+  "plugins": [
+    {
+      "name": "mcp-kaneo",
+      "source": "./",
+      "description": "MCP server for Kaneo task management API - create, read, update, delete tasks, add comments, search, and manage projects"
+    }
+  ]
+}
