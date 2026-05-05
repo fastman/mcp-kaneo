@@ -24,6 +24,7 @@ export interface Column {
 export interface Task {
   id: string;
   projectId: string;
+  workspaceId?: string;
   title: string;
   description: string;
   status: string;
@@ -108,4 +109,12 @@ export interface CreateLabelInput {
 export interface ApiError {
   error: string;
   message?: string;
+}
+
+export interface TaskRelation {
+  id: string;
+  sourceTaskId: string;
+  targetTaskId: string;
+  relationType: 'subtask' | 'blocks' | 'related';
+  createdAt: string;
 }

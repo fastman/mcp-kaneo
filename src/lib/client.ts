@@ -10,6 +10,7 @@ import type {
   TasksResponse,
   CreateTaskInput,
   CreateLabelInput,
+  TaskRelation,
 } from './types.js';
 
 export class KaneoClient {
@@ -261,8 +262,31 @@ export class KaneoClient {
   }
 
   async listSubtasks(parentTaskId: string): Promise<Task[]> {
-    const result = await this.search(`[Parent #${parentTaskId}]`, { type: 'tasks', limit: 50 });
-    return result.tasks || [];
+    const relations = await this.listTaskRelations(parentTaskId);
+    const subtaskRelations = relations.filter(r => r.relationType === 'subtask');
+    const subtasks: Task[] = [];
+    for (const rel of subtaskRelations) {
+      const task = await this.getTask(rel.targetTaskId);
+      subtasks.push(task);
+    }
+    return subtasks;
+  }
+
+  async createTaskRelation(sourceTaskId: string, targetTaskId: string, relationType: 'subtask' | 'blocks' | 'related'): Promise<TaskRelation> {
+    return this.request<TaskRelation>('/task-relation', {
+      method: 'POST',
+      body: JSON.stringify({ sourceTaskId, targetTaskId, relationType }),
+    });
+  }
+
+  async listTaskRelations(taskId: string): Promise<TaskRelation[]> {
+    return this.request<TaskRelation[]>(`/task-relation/${taskId}`);
+  }
+
+  async deleteTaskRelation(relationId: string): Promise<void> {
+    await this.request<void>(`/task-relation/${relationId}`, {
+      method: 'DELETE',
+    });
   }
 }
 

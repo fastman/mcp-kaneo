@@ -10,6 +10,7 @@ MCP server for Kaneo task management API. Lets your AI coding assistant manage t
 - **Comments**: Add and list comments on tasks
 - **Search**: Search tasks, projects, and workspaces
 - **Workspaces**: List workspaces and organizations
+- **Task Relations**: Create subtask relations (links to Kaneo's native subtasks)
 
 ## Requirements
 
@@ -132,6 +133,8 @@ Go to `Cursor Settings` → `MCP` → `New MCP Server`:
 - `kaneo_update_task_due_date` - Update task due date
 - `kaneo_delete_task` - Delete a task
 - `kaneo_list_tasks` - List tasks in a project
+- `kaneo_create_subtask` - Create a subtask linked to a parent (native Kaneo subtask)
+- `kaneo_list_subtasks` - List subtasks for a parent task (via Task Relations)
 
 ### Labels
 
@@ -152,6 +155,12 @@ Go to `Cursor Settings` → `MCP` → `New MCP Server`:
 
 - `kaneo_search` - Search tasks, projects, workspaces
 
+### Task Relations
+
+- `kaneo_create_task_relation` - Create a relation between tasks (subtask, blocks, related)
+- `kaneo_list_task_relations` - List all relations for a task
+- `kaneo_delete_task_relation` - Delete a task relation
+
 ## Usage Examples
 
 ### Create a task
@@ -160,10 +169,16 @@ Go to `Cursor Settings` → `MCP` → `New MCP Server`:
 Create a task in kaneo called "Fix login bug" with high priority
 ```
 
-### List tasks
+### Create a subtask
 
 ```
-List my kaneo tasks in the "Kaneo MCP" project
+Create a subtask "Fix the login validation" for parent task #123
+```
+
+### List subtasks
+
+```
+List all subtasks for task #123
 ```
 
 ### Add a label

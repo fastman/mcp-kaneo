@@ -199,6 +199,32 @@ export function registerTools(server: McpServer): void {
   );
 
   server.registerTool(
+    'kaneo_create_subtask',
+    {
+      title: 'Create Subtask',
+      description: 'Create a new subtask and link it to a parent task (creates native Kaneo subtask)',
+      inputSchema: z.object({
+        parentTaskId: z.string().describe('Parent task ID'),
+        title: z.string().describe('Subtask title'),
+        description: z.string().optional().describe('Subtask description'),
+        priority: priorityEnum.optional().describe('Task priority'),
+      }) as unknown as any,
+    },
+    async ({ parentTaskId, title, description, priority }: any) => {
+      const client = getClient();
+      const parentTask = await client.getTask(parentTaskId);
+      const task = await client.createTask(parentTask.projectId, {
+        title,
+        description: description || '',
+        priority: priority || 'no-priority',
+        status: 'to-do'
+      });
+      await client.createTaskRelation(parentTaskId, task.id, 'subtask');
+      return { content: [{ type: 'text' as const, text: JSON.stringify(task) }] };
+    }
+  );
+
+  server.registerTool(
     'kaneo_update_task_title',
     {
       title: 'Update Task Title',
@@ -549,6 +575,56 @@ export function registerTools(server: McpServer): void {
       const client = getClient();
       const subtasks = await client.listSubtasks(parentTaskId);
       return { content: [{ type: 'text' as const, text: JSON.stringify(subtasks) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_create_task_relation',
+    {
+      title: 'Create Task Relation',
+      description: 'Create a relation between two tasks (e.g., subtask, blocks, related)',
+      inputSchema: z.object({
+        sourceTaskId: z.string().describe('Source task ID'),
+        targetTaskId: z.string().describe('Target task ID'),
+        relationType: z.enum(['subtask', 'blocks', 'related']).describe('Relation type'),
+      }) as unknown as any,
+    },
+    async ({ sourceTaskId, targetTaskId, relationType }: any) => {
+      const client = getClient();
+      const relation = await client.createTaskRelation(sourceTaskId, targetTaskId, relationType);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(relation) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_list_task_relations',
+    {
+      title: 'List Task Relations',
+      description: 'List all relations for a task',
+      inputSchema: z.object({
+        taskId: z.string().describe('Task ID'),
+      }) as unknown as any,
+    },
+    async ({ taskId }: any) => {
+      const client = getClient();
+      const relations = await client.listTaskRelations(taskId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify(relations) }] };
+    }
+  );
+
+  server.registerTool(
+    'kaneo_delete_task_relation',
+    {
+      title: 'Delete Task Relation',
+      description: 'Delete a task relation',
+      inputSchema: z.object({
+        relationId: z.string().describe('Relation ID to delete'),
+      }) as unknown as any,
+    },
+    async ({ relationId }: any) => {
+      const client = getClient();
+      await client.deleteTaskRelation(relationId);
+      return { content: [{ type: 'text' as const, text: JSON.stringify({ success: true, relationId }) }] };
     }
   );
 }
